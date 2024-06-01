@@ -1,3 +1,5 @@
+using AutoMapper;
+
 using Tattoo.DTOs;
 using Tattoo.Entities;
 using Tattoo.Exceptions;
@@ -11,15 +13,18 @@ namespace Tattoo.Services
         private readonly ILogger<AuthService> _logger;
         private readonly IJwtService _jwtService;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
         public AuthService(
             ILogger<AuthService> logger,
             IJwtService jwtService,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IMapper mapper)
         {
             _logger = logger;
             _jwtService = jwtService;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<string> Register(RegisterRequest request)
@@ -29,14 +34,7 @@ namespace Tattoo.Services
             if (userExists)
                 throw new GenericException("User already exists");
 
-            User user = new()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Username = request.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Email = request.Email,
-                UserRoles = [new() { Role = Role.USER }]
-            };
+            User user = _mapper.Map<RegisterRequest, User>(request);
             await _userRepository.Save(user);
 
             return _jwtService.GenerateToken(user);

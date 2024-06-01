@@ -8,6 +8,7 @@ namespace Tattoo.Data
     public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<TattooStyle> TattooStyles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

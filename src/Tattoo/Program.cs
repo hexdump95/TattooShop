@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.Filters;
 
+using Tattoo.Configuration;
 using Tattoo.Data;
 using Tattoo.Repositories;
 using Tattoo.Repositories.Interfaces;
@@ -30,6 +31,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
